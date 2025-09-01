@@ -1,0 +1,156 @@
+{
+  "@@locale": "id",
+  "appTitle": "Pelacak Pengeluaran",
+  
+  "hello": "Halo, {name}!",
+
+  "dashboard": "Beranda",
+  "transactions": "Transaksi",
+  "categories": "Kategori",
+  "reports": "Laporan",
+  "settings": "Pengaturan",
+  "profile": "Profil",
+
+  "income": "Pemasukan",
+  "expense": "Pengeluaran",
+  "balance": "Saldo",
+  "totalIncome": "Total Pemasukan",
+  "totalExpense": "Total Pengeluaran",
+  "monthlyBalance": "Saldo Bulanan",
+
+  "addTransaction": "Tambah Transaksi",
+  "editTransaction": "Edit Transaksi",
+  "deleteTransaction": "Hapus Transaksi",
+  "transactionAdded": "Transaksi berhasil ditambahkan",
+  "transactionUpdated": "Transaksi berhasil diperbarui",
+  "transactionDeleted": "Transaksi berhasil dihapus",
+
+  "amount": "Jumlah",
+  "description": "Deskripsi",
+  "category": "Kategori",
+  "date": "Tanggal",
+  "type": "Jenis",
+  "receipt": "Bukti",
+
+  "selectCategory": "Pilih Kategori",
+  "selectDate": "Pilih Tanggal",
+  "selectType": "Pilih Jenis",
+  "enterAmount": "Masukkan Jumlah",
+  "enterDescription": "Masukkan Deskripsi",
+
+  "save": "Simpan",
+  "cancel": "Batal",
+  "delete": "Hapus",
+  "edit": "Edit",
+  "add": "Tambah",
+  "update": "Perbarui",
+  "confirm": "Konfirmasi",
+  "back": "Kembali",
+
+  "login": "Masuk",
+  "register": "Daftar",
+  "logout": "Keluar",
+  "email": "Email",
+  "password": "Kata Sandi",
+  "confirmPassword": "Konfirmasi Kata Sandi",
+  "name": "Nama",
+  "forgotPassword": "Lupa Kata Sandi?",
+
+  "loginSuccess": "Login berhasil",
+  "loginFailed": "Login gagal",
+  "registerSuccess": "Pendaftaran berhasil",
+  "registerFailed": "Pendaftaran gagal",
+  "logoutConfirmation": "Apakah Anda yakin ingin keluar?",
+
+  "categories": "Kategori",
+  "manageCategories": "Kelola Kategori",
+  "addCategory": "Tambah Kategori",
+  "editCategory": "Edit Kategori",
+  "deleteCategory": "Hapus Kategori",
+  "categoryName": "Nama Kategori",
+  "categoryIcon": "Ikon Kategori",
+  "categoryColor": "Warna Kategori",
+
+  "reportsAndAnalytics": "Laporan & Analisis",
+  "monthlyReport": "Laporan Bulanan",
+  "weeklyReport": "Laporan Mingguan",
+  "yearlyReport": "Laporan Tahunan",
+  "exportPDF": "Ekspor PDF",
+  "exportCSV": "Ekspor CSV",
+  "selectMonth": "Pilih Bulan",
+  "noDataAvailable": "Tidak ada data tersedia",
+
+  "incomeVsExpense": "Pemasukan vs Pengeluaran",
+  "expenseByCategory": "Pengeluaran per Kategori",
+  "monthlyTrend": "Tren Bulanan",
+  "topCategories": "Kategori Teratas",
+
+  "notifications": "Notifikasi",
+  "notificationSettings": "Pengaturan Notifikasi",
+  "dailyReminders": "Pengingat Harian",
+  "weeklyReports": "Laporan Mingguan",
+  "monthlyReports": "Laporan Bulanan",
+  "budgetAlerts": "Peringatan Anggaran",
+  "pushNotifications": "Notifikasi Push",
+  "reminderTime": "Waktu Pengingat",
+  "testNotification": "Tes Notifikasi",
+
+  "theme": "Tema",
+  "themeSettings": "Pengaturan Tema",
+  "lightMode": "Mode Terang",
+  "darkMode": "Mode Gelap",
+  "themeColor": "Warna Tema",
+  "blue": "Biru",
+  "green": "Hijau",
+  "purple": "Ungu",
+  "orange": "Oranye",
+  "red": "Merah",
+
+  "language": "Bahasa",
+  "languageSettings": "Pengaturan Bahasa",
+  "english": "Bahasa Inggris",
+  "indonesian": "Bahasa Indonesia",
+
+  "recentTransactions": "Transaksi Terbaru",
+  "viewAll": "Lihat Semua",
+  "noTransactions": "Tidak ada transaksi ditemukan",
+  "noCategories": "Tidak ada kategori ditemukan",
+
+  "searchTransactions": "Cari transaksi...",
+  "filterByCategory": "Filter berdasarkan Kategori",
+  "filterByType": "Filter berdasarkan Jenis",
+  "filterByDate": "Filter berdasarkan Tanggal",
+  "clearFilters": "Hapus Filter",
+
+  "thisMonth": "Bulan Ini",
+  "lastMonth": "Bulan Lalu",
+  "thisYear": "Tahun Ini",
+  "lastYear": "Tahun Lalu",
+  "custom": "Kustom",
+
+  "validation": {
+    "required": "Kolom ini wajib diisi",
+    "invalidEmail": "Mohon masukkan email yang valid",
+    "passwordTooShort": "Kata sandi minimal 6 karakter",
+    "passwordsNotMatch": "Kata sandi tidak cocok",
+    "invalidAmount": "Mohon masukkan jumlah yang valid",
+    "amountTooLow": "Jumlah harus lebih dari 0"
+  },
+
+  "errors": {
+    "networkError": "Kesalahan koneksi jaringan",
+    "serverError": "Terjadi kesalahan server",
+    "unknownError": "Terjadi kesalahan yang tidak diketahui",
+    "sessionExpired": "Sesi telah berakhir. Silakan masuk kembali",
+    "permissionDenied": "Izin ditolak",
+    "fileNotFound": "File tidak ditemukan"
+  },
+
+  "success": {
+    "dataSaved": "Data berhasil disimpan",
+    "dataDeleted": "Data berhasil dihapus",
+    "dataUpdated": "Data berhasil diperbarui",
+    "emailSent": "Email berhasil dikirim",
+    "passwordChanged": "Kata sandi berhasil diubah"
+  }
+}

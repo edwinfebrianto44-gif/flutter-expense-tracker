@@ -1,0 +1,168 @@
+{
+  "@@locale": "en",
+  "appTitle": "Expense Tracker",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "hello": "Hello, {name}!",
+  "@hello": {
+    "description": "Greeting message",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "John"
+      }
+    }
+  },
+
+  "dashboard": "Dashboard",
+  "transactions": "Transactions",
+  "categories": "Categories",
+  "reports": "Reports",
+  "settings": "Settings",
+  "profile": "Profile",
+
+  "income": "Income",
+  "expense": "Expense",
+  "balance": "Balance",
+  "totalIncome": "Total Income",
+  "totalExpense": "Total Expense",
+  "monthlyBalance": "Monthly Balance",
+
+  "addTransaction": "Add Transaction",
+  "editTransaction": "Edit Transaction",
+  "deleteTransaction": "Delete Transaction",
+  "transactionAdded": "Transaction added successfully",
+  "transactionUpdated": "Transaction updated successfully",
+  "transactionDeleted": "Transaction deleted successfully",
+
+  "amount": "Amount",
+  "description": "Description",
+  "category": "Category",
+  "date": "Date",
+  "type": "Type",
+  "receipt": "Receipt",
+
+  "selectCategory": "Select Category",
+  "selectDate": "Select Date",
+  "selectType": "Select Type",
+  "enterAmount": "Enter Amount",
+  "enterDescription": "Enter Description",
+
+  "save": "Save",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "edit": "Edit",
+  "add": "Add",
+  "update": "Update",
+  "confirm": "Confirm",
+  "back": "Back",
+
+  "login": "Login",
+  "register": "Register",
+  "logout": "Logout",
+  "email": "Email",
+  "password": "Password",
+  "confirmPassword": "Confirm Password",
+  "name": "Name",
+  "forgotPassword": "Forgot Password?",
+
+  "loginSuccess": "Login successful",
+  "loginFailed": "Login failed",
+  "registerSuccess": "Registration successful",
+  "registerFailed": "Registration failed",
+  "logoutConfirmation": "Are you sure you want to logout?",
+
+  "categories": "Categories",
+  "manageCategories": "Manage Categories",
+  "addCategory": "Add Category",
+  "editCategory": "Edit Category",
+  "deleteCategory": "Delete Category",
+  "categoryName": "Category Name",
+  "categoryIcon": "Category Icon",
+  "categoryColor": "Category Color",
+
+  "reportsAndAnalytics": "Reports & Analytics",
+  "monthlyReport": "Monthly Report",
+  "weeklyReport": "Weekly Report",
+  "yearlyReport": "Yearly Report",
+  "exportPDF": "Export PDF",
+  "exportCSV": "Export CSV",
+  "selectMonth": "Select Month",
+  "noDataAvailable": "No data available",
+
+  "incomeVsExpense": "Income vs Expense",
+  "expenseByCategory": "Expense by Category",
+  "monthlyTrend": "Monthly Trend",
+  "topCategories": "Top Categories",
+
+  "notifications": "Notifications",
+  "notificationSettings": "Notification Settings",
+  "dailyReminders": "Daily Reminders",
+  "weeklyReports": "Weekly Reports",
+  "monthlyReports": "Monthly Reports",
+  "budgetAlerts": "Budget Alerts",
+  "pushNotifications": "Push Notifications",
+  "reminderTime": "Reminder Time",
+  "testNotification": "Test Notification",
+
+  "theme": "Theme",
+  "themeSettings": "Theme Settings",
+  "lightMode": "Light Mode",
+  "darkMode": "Dark Mode",
+  "themeColor": "Theme Color",
+  "blue": "Blue",
+  "green": "Green",
+  "purple": "Purple",
+  "orange": "Orange",
+  "red": "Red",
+
+  "language": "Language",
+  "languageSettings": "Language Settings",
+  "english": "English",
+  "indonesian": "Indonesian",
+
+  "recentTransactions": "Recent Transactions",
+  "viewAll": "View All",
+  "noTransactions": "No transactions found",
+  "noCategories": "No categories found",
+
+  "searchTransactions": "Search transactions...",
+  "filterByCategory": "Filter by Category",
+  "filterByType": "Filter by Type",
+  "filterByDate": "Filter by Date",
+  "clearFilters": "Clear Filters",
+
+  "thisMonth": "This Month",
+  "lastMonth": "Last Month",
+  "thisYear": "This Year",
+  "lastYear": "Last Year",
+  "custom": "Custom",
+
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "passwordsNotMatch": "Passwords do not match",
+    "invalidAmount": "Please enter a valid amount",
+    "amountTooLow": "Amount must be greater than 0"
+  },
+
+  "errors": {
+    "networkError": "Network connection error",
+    "serverError": "Server error occurred",
+    "unknownError": "An unknown error occurred",
+    "sessionExpired": "Session expired. Please login again",
+    "permissionDenied": "Permission denied",
+    "fileNotFound": "File not found"
+  },
+
+  "success": {
+    "dataSaved": "Data saved successfully",
+    "dataDeleted": "Data deleted successfully",
+    "dataUpdated": "Data updated successfully",
+    "emailSent": "Email sent successfully",
+    "passwordChanged": "Password changed successfully"
+  }
+}
