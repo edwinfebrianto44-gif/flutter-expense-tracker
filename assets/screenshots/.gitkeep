@@ -1,0 +1,25 @@
+# Screenshots Directory
+
+Add your application screenshots here:
+
+## Mobile Screenshots
+- mobile-dashboard.png
+- mobile-transactions.png
+- mobile-analytics.png
+- mobile-add-transaction.png
+
+## Web Screenshots
+- web-dashboard.png
+- web-analytics.png
+
+## Guidelines for Screenshots
+- Use consistent device frames
+- Show realistic data (use demo account)
+- Maintain high resolution (1080p+)
+- Use light theme for consistency
+- Crop to remove unnecessary UI elements
+
+## Recommended Tools
+- Flutter Device Preview for consistent frames
+- Browser DevTools for web screenshots
+- Figma/Canva for adding device frames

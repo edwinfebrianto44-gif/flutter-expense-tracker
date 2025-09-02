@@ -18,7 +18,7 @@ class Category(Base):
     type = Column(Enum(CategoryType), nullable=False)
     icon = Column(String(10), nullable=True)  # Emoji or icon identifier
     color = Column(String(7), nullable=True)  # Hex color code
-    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

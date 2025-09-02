@@ -30,13 +30,13 @@ class AuthResponse(BaseModel):
 # Category Schemas
 class CategoryCreate(BaseModel):
     name: str = Field(..., example="Food", min_length=2, max_length=50, description="Category name")
-    type: str = Field(..., example="expense", regex="^(income|expense)$", description="Category type: income or expense")
+    type: str = Field(..., example="expense", pattern="^(income|expense)$", description="Category type: income or expense")
     icon: Optional[str] = Field("💰", example="🍔", description="Category icon emoji")
     color: Optional[str] = Field("#6366F1", example="#EF4444", description="Category color in hex format")
 
 class CategoryUpdate(BaseModel):
     name: Optional[str] = Field(None, example="Food & Dining", min_length=2, max_length=50, description="Category name")
-    type: Optional[str] = Field(None, example="expense", regex="^(income|expense)$", description="Category type")
+    type: Optional[str] = Field(None, example="expense", pattern="^(income|expense)$", description="Category type")
     icon: Optional[str] = Field(None, example="🍽️", description="Category icon emoji")
     color: Optional[str] = Field(None, example="#F59E0B", description="Category color in hex format")
 
@@ -52,14 +52,14 @@ class CategoryResponse(BaseModel):
 class TransactionCreate(BaseModel):
     amount: float = Field(..., example=50000.0, gt=0, description="Transaction amount in Rupiah")
     description: str = Field(..., example="Lunch at restaurant", min_length=3, max_length=200, description="Transaction description")
-    type: str = Field(..., example="expense", regex="^(income|expense)$", description="Transaction type: income or expense")
+    type: str = Field(..., example="expense", pattern="^(income|expense)$", description="Transaction type: income or expense")
     category_id: int = Field(..., example=1, description="Category ID")
     date: Optional[datetime] = Field(None, example="2025-09-01T12:00:00Z", description="Transaction date (defaults to now)")
 
 class TransactionUpdate(BaseModel):
     amount: Optional[float] = Field(None, example=75000.0, gt=0, description="Transaction amount in Rupiah")
     description: Optional[str] = Field(None, example="Dinner at restaurant", min_length=3, max_length=200, description="Transaction description")
-    type: Optional[str] = Field(None, example="expense", regex="^(income|expense)$", description="Transaction type")
+    type: Optional[str] = Field(None, example="expense", pattern="^(income|expense)$", description="Transaction type")
     category_id: Optional[int] = Field(None, example=2, description="Category ID")
     date: Optional[datetime] = Field(None, example="2025-09-01T19:00:00Z", description="Transaction date")
 

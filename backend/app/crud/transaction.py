@@ -8,6 +8,23 @@ from ..models.category import Category
 from ..schemas.transaction import TransactionCreate, TransactionUpdate, TransactionFilter, TransactionSummary
 
 
+class TransactionCRUD:
+    def get_by_id(self, db: Session, transaction_id: int) -> Optional[Transaction]:
+        return db.query(Transaction).filter(Transaction.id == transaction_id).first()
+    
+    def update(self, db: Session, transaction_id: int, transaction_update: dict) -> Optional[Transaction]:
+        db_transaction = db.query(Transaction).filter(Transaction.id == transaction_id).first()
+        if db_transaction:
+            for key, value in transaction_update.items():
+                setattr(db_transaction, key, value)
+            db.commit()
+            db.refresh(db_transaction)
+        return db_transaction
+
+
+transaction_crud = TransactionCRUD()
+
+
 def get_transaction(db: Session, transaction_id: int) -> Optional[Transaction]:
     return db.query(Transaction).filter(Transaction.id == transaction_id).first()
 

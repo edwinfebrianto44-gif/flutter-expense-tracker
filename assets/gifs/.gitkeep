@@ -1,0 +1,30 @@
+# GIFs Directory
+
+Add your application demo GIFs here:
+
+## Demo GIFs
+- add-transaction-demo.gif
+- analytics-demo.gif
+
+## Guidelines for GIFs
+- Keep file size under 5MB each
+- Duration: 5-10 seconds
+- Frame rate: 15-20 FPS
+- Show key user interactions
+- Include smooth transitions
+
+## Recommended Tools
+- LICEcap (cross-platform)
+- GIPHY Capture (Mac)
+- ScreenToGif (Windows)
+- ffmpeg for optimization
+
+## Optimization Commands
+```bash
+# Optimize GIF size
+ffmpeg -i input.gif -vf "fps=15,scale=320:-1:flags=lanczos" -c:v gif output.gif
+
+# Convert video to optimized GIF
+ffmpeg -i input.mp4 -vf "fps=20,scale=480:-1:flags=lanczos,palettegen" palette.png
+ffmpeg -i input.mp4 -i palette.png -vf "fps=20,scale=480:-1:flags=lanczos,paletteuse" output.gif
+```

@@ -7,8 +7,8 @@ from ..core.database import Base
 class Transaction(Base):
     __tablename__ = "transactions"
 
-    id = Column(BigInteger, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
     amount = Column(DECIMAL(12, 2), nullable=False)
     description = Column(String(255), nullable=True)

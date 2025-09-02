@@ -1,21 +1,27 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from datetime import datetime, timedelta
+from typing import Optional
 from ..core.database import get_db
 from ..core.response import success_response, error_response
 from ..core.rate_limiting import check_login_rate_limit, check_register_rate_limit
 from ..core.validation import validate_request_data, InputValidator
 from ..core.security import create_tokens_for_user, verify_access_token, password_security, jwt_manager
 from ..core.auth_deps import get_current_user, get_current_admin_user, get_client_info
+from ..core.logging import get_logger, log_authentication_event, log_business_event
 from ..schemas.user import (
     UserCreate, UserLogin, UserProfile, UserLoginResponse, 
     TokenRefresh, PasswordResetRequest, UserRoleUpdate
 )
-from ..crud.user import create_user, get_user_by_email, get_user_by_username, update_user_login_info
+from ..crud.user import (
+    create_user, get_user_by_email, get_user_by_username, update_user_login_info,
+    get_users, get_users_count, update_user_role
+)
 from ..models.user import User
 from ..schemas.openapi import *
 
 router = APIRouter(tags=["Authentication"])
+logger = get_logger("auth")
 
 
 @router.post(
@@ -171,8 +177,32 @@ def register_user(
         # Create user
         user = create_user(db, user_data)
         
+        # Log successful registration
+        log_authentication_event(
+            event_type="user_registration",
+            user_id=user.id,
+            email=user.email,
+            success=True
+        )
+        
+        log_business_event(
+            event_type="user_registered",
+            user_id=user.id,
+            details={
+                "username": user.username,
+                "registration_method": "email"
+            }
+        )
+        
         # Return user profile (no sensitive data)
         user_profile = UserProfile.from_orm(user)
+        
+        logger.info(
+            "User registered successfully",
+            user_id=user.id,
+            email=user.email,
+            username=user.username
+        )
         
         return success_response(
             message="User registered successfully. Please verify your email.",
@@ -180,6 +210,21 @@ def register_user(
         )
         
     except Exception as e:
+        # Log failed registration
+        log_authentication_event(
+            event_type="user_registration",
+            email=user_data.email,
+            success=False,
+            reason=str(e)
+        )
+        
+        logger.error(
+            "User registration failed",
+            email=user_data.email,
+            error=str(e),
+            exc_info=e
+        )
+        
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail={
@@ -187,45 +232,6 @@ def register_user(
                 "message": "Registration failed. Please try again."
             }
         )
-        400: {
-            "description": "Email or username already registered",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "success": False,
-                        "message": "Email already registered"
-                    }
-                }
-            }
-        },
-        422: {
-            "description": "Validation error",
-            "content": {
-                "application/json": {
-                    "example": {
-                        "detail": [
-                            {
-                                "loc": ["body", "email"],
-                                "msg": "field required",
-                                "type": "value_error.missing"
-                            }
-                        ]
-                    }
-                }
-            }
-        }
-    }
-)
-def register(user: UserCreate, db: Session = Depends(get_db)):
-    """Register a new user"""
-    try:
-        db_user = AuthService.register_user(db, user)
-        return success_response(
-            message="User registered successfully",
-            data={"id": db_user.id, "username": db_user.username, "email": db_user.email}
-        )
-    except HTTPException as e:
-        return error_response(message=e.detail)
 
 
 @router.post(
@@ -370,6 +376,14 @@ def login(
         user = get_user_by_email(db, email=login_data.email)
         
         if not user:
+            # Log failed login attempt
+            log_authentication_event(
+                event_type="login_attempt",
+                email=login_data.email,
+                success=False,
+                reason="invalid_credentials"
+            )
+            
             # Don't reveal whether user exists
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -401,6 +415,15 @@ def login(
         
         # Verify password
         if not password_security.verify_password(login_data.password, user.password_hash):
+            # Log failed login attempt
+            log_authentication_event(
+                event_type="login_attempt",
+                user_id=user.id,
+                email=user.email,
+                success=False,
+                reason="invalid_password"
+            )
+            
             # Increment failed login attempts
             user.failed_login_attempts += 1
             
@@ -408,6 +431,14 @@ def login(
             if user.failed_login_attempts >= 5:
                 user.locked_until = datetime.utcnow() + timedelta(minutes=30)
                 user.failed_login_attempts = 0  # Reset counter
+                
+                log_authentication_event(
+                    event_type="account_locked",
+                    user_id=user.id,
+                    email=user.email,
+                    success=False,
+                    reason="too_many_failed_attempts"
+                )
             
             db.commit()
             
@@ -424,6 +455,23 @@ def login(
         user.locked_until = None
         user.last_login = datetime.utcnow()
         db.commit()
+        
+        # Log successful login
+        log_authentication_event(
+            event_type="login_success",
+            user_id=user.id,
+            email=user.email,
+            success=True
+        )
+        
+        log_business_event(
+            event_type="user_login",
+            user_id=user.id,
+            details={
+                "login_method": "email",
+                "client_info": client_info
+            }
+        )
         
         # Create tokens
         user_data = {
@@ -444,6 +492,13 @@ def login(
             "expires_in": 1800,  # 30 minutes in seconds
             "user": user_profile.dict()
         }
+        
+        logger.info(
+            "User login successful",
+            user_id=user.id,
+            email=user.email,
+            username=user.username
+        )
         
         return success_response(
             message="Login successful",

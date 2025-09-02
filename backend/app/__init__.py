@@ -4,9 +4,16 @@ from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 from .core.config import get_settings
+from .core.logging import configure_logging, get_logger
+from .core.middleware import LoggingMiddleware
 from .routes import api_router
+from .routes import health
 
 settings = get_settings()
+
+# Configure structured logging
+configure_logging(log_level=settings.log_level)
+logger = get_logger("app")
 
 def custom_openapi():
     if app.openapi_schema:
@@ -98,8 +105,12 @@ All responses follow a consistent format:
                 "description": "Financial summaries and reports"
             },
             {
-                "name": "Health",
-                "description": "API health and status endpoints"
+                "name": "Health Check",
+                "description": "API health monitoring and status endpoints"
+            },
+            {
+                "name": "Metrics",
+                "description": "Application metrics and monitoring"
             }
         ]
     )
@@ -133,6 +144,9 @@ app = FastAPI(
 
 app.openapi = custom_openapi
 
+# Add logging middleware first
+app.add_middleware(LoggingMiddleware)
+
 # CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -154,16 +168,20 @@ if settings.storage_type == "local":
 # Include API router
 app.include_router(api_router, prefix="/api/v1")
 
+# Include health check endpoints at root level
+app.include_router(health.router, tags=["Health Check"])
+
 
 @app.get("/")
 def read_root():
+    logger.info("Root endpoint accessed")
     return {
         "message": f"Welcome to {settings.app_name}",
         "version": settings.app_version,
-        "status": "running"
+        "status": "running",
+        "docs": "/docs",
+        "health": "/health"
     }
 
 
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
+# Remove the simple health endpoint as we have detailed ones now

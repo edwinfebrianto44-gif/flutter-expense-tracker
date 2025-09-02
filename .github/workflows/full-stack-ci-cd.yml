@@ -1,0 +1,219 @@
+name: Full Stack CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'README.md'
+      - 'docs/**'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  # Job 1: Build Matrix Strategy
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.changes.outputs.backend }}
+      frontend: ${{ steps.changes.outputs.frontend }}
+      infrastructure: ${{ steps.changes.outputs.infrastructure }}
+    steps:
+    - uses: actions/checkout@v4
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          backend:
+            - 'backend/**'
+          frontend:
+            - 'mobile-app/**'
+          infrastructure:
+            - 'docker-compose.yml'
+            - 'nginx/**'
+            - 'scripts/**'
+
+  # Job 2: Backend Pipeline
+  backend:
+    needs: changes
+    if: needs.changes.outputs.backend == 'true' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/backend-ci-cd.yml
+    secrets: inherit
+
+  # Job 3: Frontend Pipeline
+  frontend:
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true' || github.event_name == 'workflow_dispatch'
+    uses: ./.github/workflows/frontend-ci-cd.yml
+    secrets: inherit
+
+  # Job 4: Infrastructure Tests
+  infrastructure:
+    needs: changes
+    if: needs.changes.outputs.infrastructure == 'true' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Validate docker-compose
+      run: |
+        docker-compose config
+
+    - name: Test nginx configuration
+      run: |
+        docker run --rm -v $(pwd)/nginx/nginx.conf:/etc/nginx/nginx.conf:ro nginx:alpine nginx -t
+
+    - name: Lint shell scripts
+      run: |
+        sudo apt-get install shellcheck
+        find scripts/ -name "*.sh" -exec shellcheck {} \;
+
+  # Job 5: Integration Tests
+  integration:
+    needs: [backend, frontend]
+    if: always() && (needs.backend.result == 'success' || needs.frontend.result == 'success')
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_USER: test_user
+          POSTGRES_DB: test_expense_tracker
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Docker Compose
+      run: |
+        cp docker-compose.yml docker-compose.test.yml
+        # Modify for testing environment
+        sed -i 's/POSTGRES_DB=expense_tracker/POSTGRES_DB=test_expense_tracker/' docker-compose.test.yml
+
+    - name: Build and start services
+      run: |
+        docker-compose -f docker-compose.test.yml up -d --build
+        
+        # Wait for services to be ready
+        echo "Waiting for services to start..."
+        sleep 30
+
+    - name: Run API integration tests
+      run: |
+        # Test health endpoint
+        curl -f http://localhost:8000/health
+        
+        # Test API documentation
+        curl -f http://localhost:8000/docs
+        
+        # Test basic API functionality
+        docker-compose -f docker-compose.test.yml exec -T backend python -m pytest app/tests/test_integration.py -v
+
+    - name: Run end-to-end tests
+      run: |
+        # Add your E2E tests here
+        echo "Running E2E tests..."
+        # Could use tools like Playwright, Cypress, or custom scripts
+
+    - name: Cleanup
+      if: always()
+      run: |
+        docker-compose -f docker-compose.test.yml down -v
+
+  # Job 6: Security Scanning
+  security:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: python, javascript
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+    - name: Run Snyk Security Scan
+      uses: snyk/actions/python@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+
+  # Job 7: Deploy to Staging
+  deploy-staging:
+    needs: [backend, frontend, integration]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging'))
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Deploy to staging
+      run: |
+        echo "🚀 Deploying to staging environment..."
+        # Add staging deployment logic here
+
+  # Job 8: Deploy to Production
+  deploy-production:
+    needs: [deploy-staging]
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment..."
+        # Add production deployment logic here
+
+  # Job 9: Post-deployment
+  post-deployment:
+    needs: [deploy-staging]
+    if: always() && needs.deploy-staging.result == 'success'
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Run smoke tests
+      run: |
+        echo "🧪 Running smoke tests..."
+        # Test critical user journeys
+        
+    - name: Update monitoring
+      run: |
+        echo "📊 Updating monitoring dashboards..."
+        # Update Grafana, DataDog, etc.
+
+    - name: Send notifications
+      run: |
+        echo "📢 Sending deployment notifications..."
+        # Slack, email, etc.

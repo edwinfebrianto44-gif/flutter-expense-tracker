@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     app_name: str = "Expense Tracker API"
     app_version: str = "1.0.0"
     debug: bool = False
+    log_level: str = "INFO"
     
     # File Storage
     storage_type: str = "local"  # 'local' or 's3'
