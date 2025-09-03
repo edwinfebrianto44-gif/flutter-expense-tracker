@@ -326,7 +326,7 @@ jobs:
         fi
 
     - name: Download web build
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v5
       with:
         name: web-build
         path: web-build/
