@@ -1,440 +1,335 @@
 # 💰 Flutter Expense Tracker
 
-[![Flutter](https://img.shields.io/badge/Flutter-3.19.0-blue.svg)](https://flutter.dev/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-009688.svg)](https://fastapi.tiangolo.com/)
+> A modern, full-stack expense tracking application built with Flutter and FastAPI
+
+[![Flutter](https://img.shields.io/badge/Flutter-3.x-blue.svg)](https://flutter.dev/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green.svg)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue.svg)](https://postgresql.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Demo](https://img.shields.io/badge/Demo-Available-brightgreen.svg)](https://app.expensetracker.com)
-
-A comprehensive personal finance management application built with **Flutter** (mobile/web) and **FastAPI** (backend). Track expenses, manage budgets, and gain insights into your spending habits with beautiful charts and analytics.
-
-## 🌟 Features
-
-### 💳 Transaction Management
-- ✅ Add, edit, and delete income/expense transactions
-- ✅ Categorize transactions with custom icons and colors
-- ✅ Attach receipts and photos to transactions
-- ✅ Search and filter by date, category, or amount
-- ✅ Bulk operations and CSV export
-
-### 📊 Analytics & Insights
-- ✅ Interactive charts and graphs (pie, bar, line charts)
-- ✅ Monthly/yearly spending analysis
-- ✅ Category-wise expense breakdown
-- ✅ Income vs expense trends
-- ✅ Custom date range reporting
-
-### 🎯 Budget Management
-- ✅ Set monthly/category budgets
-- ✅ Real-time budget tracking
-- ✅ Budget alerts and notifications
-- ✅ Spending goals and targets
-
-### 📱 Cross-Platform
-- ✅ **Flutter Mobile App** (iOS & Android)
-- ✅ **Flutter Web App** (Responsive design)
-- ✅ **REST API Backend** (FastAPI + PostgreSQL)
-- ✅ Real-time synchronization across devices
-
-### 🔐 Security & Authentication
-- ✅ JWT-based authentication
-- ✅ Email verification
-- ✅ Password reset functionality
-- ✅ Secure file upload
-- ✅ Role-based access control
-
-### 🚀 Production Features
-- ✅ **SSL A+ Grade** security
-- ✅ **Automated backups** with encryption
-- ✅ **Health monitoring** and logging
-- ✅ **Docker deployment** ready
-- ✅ **CI/CD pipeline** integration
-
-## 🎮 Live Demo
-
-**Try the live demo:**
-
-🌐 **Web App:** [https://app.expensetracker.com](https://app.expensetracker.com)  
-📱 **API Docs:** [https://api.expensetracker.com/docs](https://api.expensetracker.com/docs)
-
-**Demo Account:**
-- 📧 **Email:** `demo@demo.com`
-- 🔑 **Password:** `password123`
-
-> The demo account includes 5 categories and 30 sample transactions to explore all features.
-
-## 📱 Screenshots
-
-### Mobile App
-<div align="center">
-  <img src="assets/screenshots/mobile-dashboard.png" alt="Mobile Dashboard" width="200"/>
-  <img src="assets/screenshots/mobile-transactions.png" alt="Mobile Transactions" width="200"/>
-  <img src="assets/screenshots/mobile-analytics.png" alt="Mobile Analytics" width="200"/>
-  <img src="assets/screenshots/mobile-add-transaction.png" alt="Add Transaction" width="200"/>
-</div>
-
-### Web App
-<div align="center">
-  <img src="assets/screenshots/web-dashboard.png" alt="Web Dashboard" width="800"/>
-</div>
-
-<div align="center">
-  <img src="assets/screenshots/web-analytics.png" alt="Web Analytics" width="800"/>
-</div>
-
-### Features Demo
-<div align="center">
-  <img src="assets/gifs/add-transaction-demo.gif" alt="Add Transaction Demo" width="300"/>
-  <img src="assets/gifs/analytics-demo.gif" alt="Analytics Demo" width="300"/>
-</div>
-
-## 🛠️ Tech Stack
-
-### Frontend (Flutter)
-- **Framework:** Flutter 3.19.0
-- **State Management:** Provider + Riverpod
-- **HTTP Client:** Dio
-- **Charts:** FL Chart
-- **UI Components:** Material Design 3
-- **Internationalization:** Flutter Intl
-- **Local Storage:** SharedPreferences + Hive
-
-### Backend (FastAPI)
-- **Framework:** FastAPI 0.104.1
-- **Database:** PostgreSQL 15
-- **ORM:** SQLAlchemy 2.0
-- **Authentication:** JWT (PyJWT)
-- **Validation:** Pydantic 2.0
-- **File Storage:** S3/MinIO
-- **Caching:** Redis
-- **Migrations:** Alembic
-
-### DevOps & Infrastructure
-- **Containerization:** Docker + Docker Compose
-- **Reverse Proxy:** Nginx
-- **SSL/TLS:** Let's Encrypt (A+ Grade)
-- **Monitoring:** Prometheus + Grafana
-- **Logging:** Structured JSON logging
-- **Backup:** Automated S3 backups with encryption
-- **CI/CD:** GitHub Actions
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://docker.com/)
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- **Flutter SDK** 3.19.0+
-- **Python** 3.11+
-- **PostgreSQL** 15+
-- **Redis** (optional, for caching)
-- **Docker** (for containerized deployment)
+### Using Docker (Recommended)
 
-### 1. Clone Repository
+1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/flutter-expense-tracker.git
+git clone https://github.com/edwinfebrianto44-gif/flutter-expense-tracker.git
 cd flutter-expense-tracker
 ```
 
-### 2. Backend Setup
-
-#### Using Docker (Recommended)
+2. **Start the application**
 ```bash
 # Start all services
 docker-compose up -d
 
-# The API will be available at http://localhost:8000
-# API documentation: http://localhost:8000/docs
+# Or for development
+docker-compose -f docker-compose.dev.yml up -d
 ```
 
-#### Manual Setup
+3. **Access the application**
+- **Frontend (Flutter Web)**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+
+### Demo Account
+```
+Email: demo@demo.com
+Password: password123
+```
+
+## 🛠️ Manual Setup
+
+### Backend Setup
+
+1. **Navigate to backend directory**
 ```bash
 cd backend
+```
 
-# Create virtual environment
+2. **Create virtual environment**
+```bash
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
-# or: venv\Scripts\activate  # Windows
+# or
+venv\Scripts\activate     # Windows
+```
 
-# Install dependencies
+3. **Install dependencies**
+```bash
 pip install -r requirements.txt
+```
 
-# Setup environment
+4. **Set environment variables**
+```bash
 cp .env.example .env
-# Edit .env with your database credentials
+# Edit .env with your configuration
+```
 
+5. **Setup database**
+```bash
 # Run migrations
 alembic upgrade head
 
-# Create admin user
+# Create demo data
 python setup_admin.py
+```
 
-# Start server
+6. **Start backend server**
+```bash
 uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-### 3. Frontend Setup
+### Frontend Setup
 
-#### Flutter Mobile/Web App
+1. **Navigate to mobile-app directory**
 ```bash
 cd mobile-app
+```
 
-# Install dependencies
+2. **Install Flutter dependencies**
+```bash
 flutter pub get
-
-# Generate code
-flutter packages pub run build_runner build
-
-# Run on web
-flutter run -d chrome
-
-# Run on mobile (with device/emulator connected)
-flutter run
 ```
 
-### 4. Setup Demo Data
+3. **Run for web**
 ```bash
-# Create demo account and sample data
-chmod +x scripts/setup-demo-data.sh
-./scripts/setup-demo-data.sh
+flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000
 ```
 
-## 📋 Configuration
+## 📊 Features
 
-### Backend Environment Variables
+### 💡 Core Features
+- ✅ User authentication & authorization
+- ✅ Transaction management (income/expense)
+- ✅ Category management with icons
+- ✅ Monthly/yearly reporting
+- ✅ Data export (CSV, PDF)
+- ✅ File attachments for transactions
+- ✅ Real-time dashboard
+- ✅ Responsive web interface
+
+### 🎨 UI/UX Features
+- ✅ Material Design 3
+- ✅ Dark/Light theme support
+- ✅ Interactive charts & graphs
+- ✅ Mobile-first responsive design
+- ✅ Smooth animations
+
+### 🔧 Technical Features
+- ✅ JWT Authentication
+- ✅ PostgreSQL database
+- ✅ Redis caching
+- ✅ File upload support
+- ✅ RESTful API
+- ✅ Docker containerization
+- ✅ Health monitoring
+- ✅ API documentation
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Flutter Web   │────│   FastAPI       │────│   PostgreSQL    │
+│   (Frontend)    │    │   (Backend)     │    │   (Database)    │
+│   Port: 3000    │    │   Port: 8000    │    │   Port: 5432    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │              ┌─────────────────┐              │
+         └──────────────│     Redis       │──────────────┘
+                        │    (Cache)      │
+                        │   Port: 6379    │
+                        └─────────────────┘
+```
+
+## 📁 Project Structure
+
+```
+flutter-expense-tracker/
+├── 🔧 backend/                 # FastAPI Backend
+│   ├── app/
+│   │   ├── core/              # Core configurations
+│   │   ├── models/            # Database models
+│   │   ├── routes/            # API endpoints
+│   │   ├── services/          # Business logic
+│   │   └── schemas/           # Pydantic models
+│   ├── migrations/            # Database migrations
+│   ├── Dockerfile
+│   └── requirements.txt
+├── 📱 mobile-app/             # Flutter Frontend
+│   ├── lib/
+│   │   ├── core/              # App configuration
+│   │   ├── models/            # Data models
+│   │   ├── providers/         # State management
+│   │   ├── screens/           # UI screens
+│   │   ├── services/          # API services
+│   │   └── widgets/           # Reusable widgets
+│   ├── Dockerfile.web
+│   └── pubspec.yaml
+├── 🐳 docker-compose.yml      # Production setup
+├── 🛠️ docker-compose.dev.yml  # Development setup
+└── 📖 README.md
+```
+
+## 🚀 Deployment
+
+### Docker Production
+
+1. **Production deployment**
 ```bash
-# Copy example configuration
-cp backend/.env.example backend/.env
+docker-compose -f docker-compose.production.yml up -d
 ```
 
-Key configuration options:
-```env
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/expense_tracker
-
-# Security
-JWT_SECRET_KEY=your-super-secret-jwt-key
-API_SECRET_KEY=your-api-secret-key
-
-# Email (for notifications)
-SMTP_HOST=smtp.gmail.com
-SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-
-# File Storage (optional S3/MinIO)
-USE_S3=true
-AWS_ACCESS_KEY_ID=your-access-key
-AWS_SECRET_ACCESS_KEY=your-secret-key
-S3_BUCKET=expense-tracker-uploads
-
-# Features
-FEATURE_REGISTRATION_ENABLED=true
-FEATURE_EMAIL_VERIFICATION=true
-```
-
-### Flutter App Configuration
+2. **Environment variables**
 ```bash
-# API endpoint configuration
-# Edit: mobile-app/lib/core/config/app_config.dart
+# Set production environment variables
+export SECRET_KEY="your-production-secret-key"
+export DATABASE_URL="postgresql://user:pass@host:5432/db"
+export REDIS_URL="redis://host:6379/0"
 ```
 
-## 🧪 Testing
+### Manual Deployment
 
-### Backend Tests
+1. **Backend deployment**
 ```bash
 cd backend
-
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=app tests/
-
-# Run specific test file
-pytest tests/test_auth.py -v
+gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
 ```
 
-### Frontend Tests
+2. **Frontend deployment**
 ```bash
 cd mobile-app
-
-# Run unit tests
-flutter test
-
-# Run integration tests
-flutter test integration_test/
-```
-
-## 📦 Deployment
-
-### Production Deployment
-
-#### 1. Server Setup
-```bash
-# Setup SSL certificates
-sudo ./scripts/ssl-setup-production.sh
-
-# Configure firewall
-sudo ./scripts/firewall-setup.sh
-
-# Setup environment
-./scripts/env-management.sh
-```
-
-#### 2. Deploy Backend
-```bash
-# Build and deploy
-docker-compose -f docker-compose.prod.yml up -d
-
-# Setup automated backups
-sudo ./scripts/backup-system.sh
-```
-
-#### 3. Deploy Frontend
-```bash
-cd mobile-app
-
-# Build web version
 flutter build web --release
-
-# Deploy to web server
-# Copy build/web/* to /var/www/expense-tracker/
+# Serve build/web with nginx or any web server
 ```
 
-### Deployment Architecture
+## 🔧 Configuration
+
+### Environment Variables
+
+#### Backend (.env)
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/expense_tracker
+REDIS_URL=redis://localhost:6379/0
+SECRET_KEY=your-super-secret-key
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+REFRESH_TOKEN_EXPIRE_DAYS=7
+CORS_ORIGINS=http://localhost:3000
+UPLOAD_DIR=./uploads
+MAX_FILE_SIZE=10485760
 ```
-Internet
-    ↓
-[Nginx Reverse Proxy] (SSL Termination)
-    ↓
-[Flutter Web App] ←→ [FastAPI Backend]
-                           ↓
-                    [PostgreSQL DB]
-                           ↓
-                    [Redis Cache]
-                           ↓
-                    [S3/MinIO Storage]
+
+#### Frontend (lib/core/config.dart)
+```dart
+class AppConfig {
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://localhost:8000',
+  );
+}
 ```
 
-## 📖 API Documentation
+## 📱 API Endpoints
 
-### Interactive API Docs
-- **Swagger UI:** `/docs`
-- **ReDoc:** `/redoc`
-- **OpenAPI JSON:** `/openapi.json`
+### Authentication
+- `POST /api/v1/auth/register` - User registration
+- `POST /api/v1/auth/login` - User login
+- `POST /api/v1/auth/refresh` - Refresh token
+- `POST /api/v1/auth/logout` - User logout
 
-### Key Endpoints
+### Transactions
+- `GET /api/v1/transactions` - Get all transactions
+- `POST /api/v1/transactions` - Create transaction
+- `PUT /api/v1/transactions/{id}` - Update transaction
+- `DELETE /api/v1/transactions/{id}` - Delete transaction
+
+### Categories
+- `GET /api/v1/categories` - Get all categories
+- `POST /api/v1/categories` - Create category
+- `PUT /api/v1/categories/{id}` - Update category
+- `DELETE /api/v1/categories/{id}` - Delete category
+
+### Reports
+- `GET /api/v1/reports/monthly` - Monthly report
+- `GET /api/v1/reports/yearly` - Yearly report
+- `GET /api/v1/reports/export` - Export data
+
+## 🧪 Development
+
+### Run Tests
 ```bash
-# Authentication
-POST /auth/register     # Register new user
-POST /auth/login        # Login user
-POST /auth/refresh      # Refresh token
+# Backend tests
+cd backend
+python -m pytest
 
-# Transactions
-GET    /transactions    # List transactions
-POST   /transactions    # Create transaction
-PUT    /transactions/{id}  # Update transaction
-DELETE /transactions/{id}  # Delete transaction
-
-# Categories
-GET    /categories      # List categories
-POST   /categories      # Create category
-
-# Analytics
-GET /analytics/summary  # Financial summary
-GET /analytics/trends   # Spending trends
-GET /analytics/categories  # Category breakdown
-
-# File Upload
-POST /upload/receipt    # Upload receipt image
+# Frontend tests
+cd mobile-app
+flutter test
 ```
+
+### Database Migration
+```bash
+cd backend
+alembic revision --autogenerate -m "migration message"
+alembic upgrade head
+```
+
+### Add New Dependencies
+
+#### Backend
+```bash
+cd backend
+pip install new-package
+pip freeze > requirements.txt
+```
+
+#### Frontend
+```bash
+cd mobile-app
+flutter pub add new_package
+```
+
+## 🔒 Security Features
+
+- 🔐 JWT-based authentication
+- 🛡️ Password hashing with bcrypt
+- 🔒 CORS protection
+- 🚫 SQL injection prevention
+- 📊 Rate limiting
+- 🔍 Input validation
+- 🛡️ XSS protection
+
+## 📊 Monitoring
+
+Access monitoring tools:
+- **Prometheus**: http://localhost:9090
+- **Grafana**: http://localhost:3001 (admin/admin123)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for details.
-
-### Development Workflow
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-### Code Style
-- **Backend:** Follow PEP 8, use Black formatter
-- **Frontend:** Follow Dart style guide, use `flutter format`
-- **Commits:** Use conventional commit messages
-
-## 📊 Project Stats
-
-- **Lines of Code:** ~15,000+
-- **Test Coverage:** 85%+
-- **Performance:** <100ms API response time
-- **Security:** A+ SSL Grade
-- **Uptime:** 99.9%
-
-## 🔒 Security
-
-- **SSL/TLS:** A+ grade encryption
-- **Authentication:** JWT with refresh tokens
-- **Input Validation:** Comprehensive validation on all endpoints
-- **File Upload:** Secure file handling with virus scanning
-- **Rate Limiting:** API rate limiting and DDoS protection
-- **Data Privacy:** GDPR compliant data handling
-
-For security issues, please email: security@expensetracker.com
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 👨‍💻 Author
+
+**Edwin Febrianto**
+- GitHub: [@edwinfebrianto44-gif](https://github.com/edwinfebrianto44-gif)
+- Email: edwinfebrianto44@gmail.com
+
 ## 🙏 Acknowledgments
 
-- **Flutter Team** for the amazing framework
-- **FastAPI** for the modern Python web framework
-- **Material Design** for the design system
-- **Chart.js & FL Chart** for beautiful visualizations
-- **Open Source Community** for all the amazing packages
-
-## 📞 Support
-
-- **Documentation:** [docs.expensetracker.com](https://docs.expensetracker.com)
-- **Issues:** [GitHub Issues](https://github.com/your-username/flutter-expense-tracker/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/your-username/flutter-expense-tracker/discussions)
-- **Email:** support@expensetracker.com
-
-## 🗺️ Roadmap
-
-### Phase 1 ✅ (Completed)
-- [x] Basic CRUD operations
-- [x] Authentication system
-- [x] Category management
-- [x] File upload functionality
-
-### Phase 2 ✅ (Completed)
-- [x] Analytics and reporting
-- [x] Chart visualizations
-- [x] Advanced filtering
-- [x] Budget management
-
-### Phase 3 ✅ (Completed)
-- [x] Production deployment
-- [x] Security hardening
-- [x] Automated backups
-- [x] Monitoring and logging
-
-### Phase 4 🚧 (In Progress)
-- [ ] Mobile app optimization
-- [ ] Offline support
-- [ ] Push notifications
-- [ ] Multi-currency support
-
-### Phase 5 📋 (Planned)
-- [ ] Social features
-- [ ] Family/shared accounts
-- [ ] AI-powered insights
-- [ ] Integration with banks/financial services
+- Flutter team for the amazing framework
+- FastAPI for the modern Python web framework
+- PostgreSQL for reliable database
+- Docker for containerization
 
 ---
 
-<div align="center">
-  <p>Made with ❤️ by <a href="https://github.com/your-username">Your Name</a></p>
-  <p>⭐ Star this repo if you find it helpful!</p>
-</div>
+⭐ If you found this project helpful, please give it a star!

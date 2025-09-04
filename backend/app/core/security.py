@@ -162,36 +162,6 @@ token_blacklist = TokenBlacklist()
 pwd_context = password_security.pwd_context
 
 
-def create_access_token(subject: Union[str, Any], expires_delta: timedelta = None):
-    """Legacy function for backward compatibility"""
-    data = {"sub": str(subject)}
-    return jwt_manager.create_access_token(data, expires_delta)
-
-
-def create_refresh_token(subject: Union[str, Any]):
-    """Legacy function for backward compatibility"""
-    data = {"sub": str(subject)}
-    return jwt_manager.create_refresh_token(data)
-
-
-def verify_password(plain_password: str, hashed_password: str):
-    """Legacy function for backward compatibility"""
-    return password_security.verify_password(plain_password, hashed_password)
-
-
-def get_password_hash(password: str):
-    """Legacy function for backward compatibility"""
-    return password_security.hash_password(password)
-
-
-def verify_token(token: str):
-    """Legacy function for backward compatibility"""
-    try:
-        return jwt_manager.verify_token(token)
-    except HTTPException:
-        return None
-
-
 def create_tokens_for_user(user_data: Dict[str, Any]) -> Dict[str, str]:
     """Create both access and refresh tokens for user"""
     # Prepare token data

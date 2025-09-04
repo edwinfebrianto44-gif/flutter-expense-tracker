@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: expense_tracker
+      POSTGRES_USER: expense_user
+      POSTGRES_PASSWORD: expense_password_2024
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/schema_and_seed.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - expense_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U expense_user -d expense_tracker"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - expense_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass redis_password_2024
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://expense_user:expense_password_2024@postgres:5432/expense_tracker
+      - REDIS_URL=redis://:redis_password_2024@redis:6379/0
+      - SECRET_KEY=your-super-secret-key-change-in-production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - REFRESH_TOKEN_EXPIRE_DAYS=7
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - CORS_ORIGINS=http://localhost:3000,https://app.expensetracker.com
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=587
+      - SMTP_USER=your-email@gmail.com
+      - SMTP_PASSWORD=your-app-password
+      - FROM_EMAIL=noreply@expensetracker.com
+      - UPLOAD_DIR=/app/uploads
+      - MAX_FILE_SIZE=10485760
+    ports:
+      - "8000:8000"
+    volumes:
+      - backend_uploads:/app/uploads
+      - ./backend/app:/app/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - expense_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
+      - backend_uploads:/var/www/uploads
+    depends_on:
+      - backend
+    networks:
+      - expense_network
+    restart: unless-stopped
+
+  # Flutter Web App (Production build)
+  frontend:
+    build:
+      context: ./mobile-app
+      dockerfile: Dockerfile.web
+      args:
+        - API_BASE_URL=https://api.expensetracker.com
+    ports:
+      - "3000:80"
+    networks:
+      - expense_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - expense_network
+    restart: unless-stopped
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - expense_network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+  backend_uploads:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  expense_network:
+    driver: bridge

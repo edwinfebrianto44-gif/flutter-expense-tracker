@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: expense_tracker_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./db/schema_and_seed.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"  # Different port for dev
+    networks:
+      - expense_dev_network
+    restart: unless-stopped
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"  # Different port for dev
+    volumes:
+      - redis_dev_data:/data
+    networks:
+      - expense_dev_network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+
+  # Backend API (Development)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://dev_user:dev_password@postgres:5432/expense_tracker_dev
+      - REDIS_URL=redis://redis:6379/0
+      - SECRET_KEY=dev-secret-key-not-for-production
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=60
+      - REFRESH_TOKEN_EXPIRE_DAYS=30
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080
+      - UPLOAD_DIR=/app/uploads
+      - MAX_FILE_SIZE=10485760
+    ports:
+      - "8001:8000"  # Different port for dev
+    volumes:
+      - backend_dev_uploads:/app/uploads
+      - ./backend/app:/app/app  # Hot reload for development
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - expense_dev_network
+    restart: unless-stopped
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Flutter Web Development Server
+  flutter_dev:
+    build:
+      context: ./mobile-app
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./mobile-app:/app
+      - flutter_dev_cache:/root/.pub-cache
+    environment:
+      - API_BASE_URL=http://localhost:8001
+    networks:
+      - expense_dev_network
+    restart: unless-stopped
+    command: flutter run -d web-server --web-hostname 0.0.0.0 --web-port 8080
+
+volumes:
+  postgres_dev_data:
+  redis_dev_data:
+  backend_dev_uploads:
+  flutter_dev_cache:
+
+networks:
+  expense_dev_network:
+    driver: bridge

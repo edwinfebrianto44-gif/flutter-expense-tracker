@@ -64,15 +64,15 @@ def create_demo_user(db: Session):
     """Create demo user for testing"""
     
     # Check if demo user already exists
-    existing_demo = db.query(User).filter(User.email == "demo@expensetracker.com").first()
+    existing_demo = db.query(User).filter(User.email == "demo@demo.com").first()
     if existing_demo:
         print("✅ Demo user already exists")
         return existing_demo
     
     demo_data = {
         "username": "demo_user",
-        "email": "demo@expensetracker.com",
-        "password": "Demo123!",
+        "email": "demo@demo.com",
+        "password": "password123",
         "full_name": "Demo User"
     }
     

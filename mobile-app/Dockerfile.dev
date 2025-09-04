@@ -1,0 +1,30 @@
+# Development Dockerfile for Flutter
+FROM cirrusci/flutter:stable
+
+# Set environment variables
+ENV FLUTTER_WEB=true
+ENV FLUTTER_CHANNEL=stable
+
+# Set working directory
+WORKDIR /app
+
+# Install additional dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy pubspec files
+COPY pubspec.yaml pubspec.lock ./
+
+# Get dependencies
+RUN flutter pub get
+
+# Copy source code
+COPY . .
+
+# Expose port for development server
+EXPOSE 8080
+
+# Start development server
+CMD ["flutter", "run", "-d", "web-server", "--web-hostname", "0.0.0.0", "--web-port", "8080"]
