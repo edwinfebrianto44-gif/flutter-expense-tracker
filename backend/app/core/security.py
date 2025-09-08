@@ -158,6 +158,32 @@ password_security = PasswordSecurity()
 jwt_manager = JWTManager()
 token_blacklist = TokenBlacklist()
 
+
+# Convenience functions for backward compatibility
+def get_password_hash(password: str) -> str:
+    """Hash password using the global password security instance"""
+    return password_security.hash_password(password)
+
+
+def verify_password(plain_password: str, hashed_password: str) -> bool:
+    """Verify password using the global password security instance"""
+    return password_security.verify_password(plain_password, hashed_password)
+
+
+def verify_token(token: str, token_type: str = "access") -> Dict[str, Any]:
+    """Verify token using the global JWT manager instance"""
+    return jwt_manager.verify_token(token, token_type)
+
+
+def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    """Create access token using the global JWT manager instance"""
+    return jwt_manager.create_access_token(data, expires_delta)
+
+
+def create_refresh_token(data: Dict[str, Any]) -> str:
+    """Create refresh token using the global JWT manager instance"""
+    return jwt_manager.create_refresh_token(data)
+
 # Backward compatibility
 pwd_context = password_security.pwd_context
 
