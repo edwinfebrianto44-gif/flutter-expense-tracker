@@ -237,7 +237,7 @@ jobs:
 
     # Deploy to Netlify
     - name: Deploy to Netlify
-      uses: nwtgck/actions-netlify@v2.1
+      uses: nwtgck/actions-netlify@v3.0
       with:
         publish-dir: './mobile-app/build/web'
         production-branch: main
